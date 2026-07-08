@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
-		"module": "Node16",
+		"module": "esnext",
+		"moduleResolution": "bundler",
 		"target": "ES2022",
 		"types":["node","vscode","mocha"],
 		"lib": [
@@ -13,5 +14,14 @@
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
 		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
+		"skipLibCheck": true,
+		"paths": {
+			"react": ["./node_modules/preact/compat/"],
+			"react/jsx-runtime": ["./node_modules/preact/jsx-runtime"],
+			"react-dom": ["./node_modules/preact/compat/"],
+			"react-dom/*": ["./node_modules/preact/compat/*"]
+		},
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact",
 	}
 }

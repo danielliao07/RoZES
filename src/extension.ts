@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
-import { spawn } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Graph } from 'chyp2/lib/graph';
+import { graphToSvgString, graphToJson } from './chypRender';
+import { graphFromJsonRobust } from './termParser';
 
 let diagramPanel: vscode.WebviewPanel | undefined;
 
@@ -20,11 +22,6 @@ export async function activate(context: vscode.ExtensionContext) {
     // Activate it (or get it if already active)
     const api = await vsrocq.activate();
 
-    if (!api?.onProofStateChanged) {
-        vscode.window.showErrorMessage('VSRocq API not available. Make sure you are using the modified fork.');
-        return;
-    }
-
     vscode.window.showInformationMessage('string-diagrams connected to VSRocq!');
 
     // Listen for proof state changes
@@ -39,9 +36,34 @@ export async function activate(context: vscode.ExtensionContext) {
             }
             const goalText = stringOfPpString(pv.proof.goals[0].goal);
             console.log(goalText); // prints goal text
+
+            //just hedge everything
+            if (!pv.messages || pv.messages.length === 0 || !pv.messages[0]) {
+                return;
+            }
             const messageText = stringOfPpString(pv.messages[0][1]);
             console.log(messageText);
-            renderDiagram(context);
+
+            // TEMPORARY: hardcoded graph 
+            //const f = Graph.gen('f', 2, 3);
+            //const g = Graph.gen('g', 3, 1);
+            //const h = Graph.gen('h', 1, 4);
+            //const testGraph = f.compose(g).compose(h);
+
+            
+
+            if (!messageText.trim().startsWith("{")) {
+                return;
+            }
+
+            const json = JSON.parse(messageText);
+
+            if (json.type !== "diagram") {
+                return;
+            }
+
+            const graph = graphFromJsonRobust(json.data);
+            renderDiagram(context, graph);
         })
     );
 }
@@ -71,36 +93,77 @@ export const stringOfPpString = (pp: any): string => {
 };
 
 
-function renderDiagram(context: vscode.ExtensionContext) {
-    const scriptPath = path.join(context.extensionPath, 'src', 'TensorRocqParsing.ipynb');
-    const svgPath = path.join(context.extensionPath, 'src', 'test', 'testdiagram.svg');
-    const python = spawn('python', [scriptPath]);
-
-    python.stdout.on('data', (data) => {
-        console.log('Python output:', data.toString());
-    });
-
-    python.stderr.on('data', (data) => {
-        console.error('Python error:', data.toString());
-    });
-
-    python.on('close', (code) => {
-        console.log('Python process exited with code:', code);
-        if (code === 0) {
-            showDiagram(context,svgPath);
-        }
-    });
+function renderDiagram(context: vscode.ExtensionContext, graph: Graph) {
+    const graphData = graphToJson(graph);
+    showDiagram(context, graphData);
 }
 
 
 
-function showDiagram(context: vscode.ExtensionContext, svgPath: string) {
+function showDiagram(context: vscode.ExtensionContext, graphData: object) {
     if (!diagramPanel) {
         diagramPanel = vscode.window.createWebviewPanel(
             'stringDiagram',
             'String Diagram',
             vscode.ViewColumn.Two,
-            { enableScripts: true }
+            { enableScripts: true,
+            localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'dist')]
+             }
+        );
+
+        diagramPanel.onDidDispose(() => {
+            diagramPanel = undefined;
+        });
+
+        //load webview
+        const webviewJsUri = diagramPanel.webview.asWebviewUri(
+        vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview.js')
+    );
+    diagramPanel.webview.html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="UTF-8">
+        <style>
+            body { margin: 0; padding: 0; background: #1e1e1e; }
+            .graph-panel { background: white; }
+        </style>
+        </head>
+        <body>
+            <div id="root"></div>
+            <script src="${webviewJsUri}"></script>
+        </body>
+        </html>
+    `;
+
+
+    // Wait for webview to signal it's ready, then send the graph
+        diagramPanel.webview.onDidReceiveMessage(msg => {
+            console.log('received message from webview:', msg);
+            if (msg.type === 'ready') {
+                console.log('webview ready');
+                diagramPanel!.webview.postMessage(graphData);
+            }
+        });
+    } else {
+
+    diagramPanel.webview.postMessage(graphData);
+
+    }
+}
+
+function showError(context: vscode.ExtensionContext, message: string) {
+    if (!diagramPanel) {
+        diagramPanel = vscode.window.createWebviewPanel(
+            'stringDiagram',
+            'String Diagram',
+            vscode.ViewColumn.Two,
+            {
+                enableScripts: true,
+                localResourceRoots: [
+                    vscode.Uri.joinPath(context.extensionUri, 'dist')
+                ]
+            }
         );
 
         diagramPanel.onDidDispose(() => {
@@ -108,13 +171,12 @@ function showDiagram(context: vscode.ExtensionContext, svgPath: string) {
         });
     }
 
-    // Read the SVG file and display it
-    const svgContent = fs.readFileSync(svgPath, 'utf8');
     diagramPanel.webview.html = `
         <!DOCTYPE html>
         <html>
-        <body style="background: white; padding: 20px;">
-            ${svgContent}
+        <body>
+            <h2>Not a recognized string diagram</h2>
+            <p>${message}</p>
         </body>
         </html>
     `;
