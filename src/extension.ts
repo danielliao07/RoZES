@@ -53,6 +53,9 @@ export async function activate(context: vscode.ExtensionContext) {
             
 
             if (!messageText.trim().startsWith("{")) {
+                if (messageText) {
+                    vscode.window.showErrorMessage('Unrecognized message text');
+                };
                 return;
             }
 
@@ -98,9 +101,10 @@ function renderDiagram(context: vscode.ExtensionContext, graph: Graph) {
     showDiagram(context, graphData);
 }
 
-
+let loadingGraphData: object | null = null;
 
 function showDiagram(context: vscode.ExtensionContext, graphData: object) {
+    loadingGraphData = graphData;
     if (!diagramPanel) {
         diagramPanel = vscode.window.createWebviewPanel(
             'stringDiagram',
@@ -119,14 +123,15 @@ function showDiagram(context: vscode.ExtensionContext, graphData: object) {
         const webviewJsUri = diagramPanel.webview.asWebviewUri(
         vscode.Uri.joinPath(context.extensionUri, 'dist', 'webview.js')
     );
+
     diagramPanel.webview.html = `
         <!DOCTYPE html>
         <html>
         <head>
         <meta charset="UTF-8">
         <style>
-            body { margin: 0; padding: 0; background: #1e1e1e; }
-            .graph-panel { background: white; }
+            body { margin: 0; padding: 0; background: #ac5e2d; }
+            .graph-panel { width: 100%; height: 100%; background: white; }
         </style>
         </head>
         <body>
@@ -140,9 +145,11 @@ function showDiagram(context: vscode.ExtensionContext, graphData: object) {
     // Wait for webview to signal it's ready, then send the graph
         diagramPanel.webview.onDidReceiveMessage(msg => {
             console.log('received message from webview:', msg);
-            if (msg.type === 'ready') {
+            if (msg.type === 'ready' && loadingGraphData) {
                 console.log('webview ready');
-                diagramPanel!.webview.postMessage(graphData);
+                diagramPanel!.webview.postMessage(loadingGraphData);
+                console.log(graphData);
+                console.log(loadingGraphData);
             }
         });
     } else {
