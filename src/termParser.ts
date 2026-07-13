@@ -30,14 +30,27 @@ interface StructNode {
     data: SwapNode;
 }
 
+interface IdNode {
+    type: "id";
+    size: number[];
+}
+
+interface EquationNode {
+    type: "equation";
+    data: JsonTerm[];
+    diagramtype: string;
+}
+
 type JsonTerm =
     | GenNode
     | ComposeNode
     | StackNode
     | StructNode
-    | SwapNode;
+    | SwapNode
+    | IdNode
+    | EquationNode;
 
-//Construct the permutation corresponding to swapping top wires with bottom wires.
+//Construct the permutation corresponding to swapping top wires with bottom wires
 
 function swapPerm(top: number[], bottom: number[]): number[] {
     const m = top.length;
@@ -74,8 +87,29 @@ export function graphFromJsonRobust(node: JsonTerm): Graph {
             return Graph.perm(
                 swapPerm(node.top, node.bottom)
             );
+        
+        case "id": {
+            const n = node.size.length;
+            // identity on n wires means do nothing
+            if (n === 0) {return Graph.identity();}
+            return Graph.perm(Array.from({ length: n }, (_, i) => i));
+        }
+
+        case "equation": {
+            //TEMPORARY: return just LHS
+            return graphFromJsonRobust(node.data[0]);
+        }
 
         default:
-            throw new Error(`Unknown type`);
+            throw new Error(`Unknown graph type`);
     }
+}
+
+//unused for now
+export function lhsFromJson(node: EquationNode): Graph {
+    return graphFromJsonRobust(node.data[0]);
+}
+
+export function rhsFromJson(node: EquationNode): Graph {
+    return graphFromJsonRobust(node.data[1]);
 }

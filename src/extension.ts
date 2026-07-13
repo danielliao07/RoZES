@@ -10,8 +10,7 @@ let diagramPanel: vscode.WebviewPanel | undefined;
 export async function activate(context: vscode.ExtensionContext) {
     console.log('string-diagrams activating');
     vscode.window.showInformationMessage('string-diagrams activated');
-
-    // Get the VSRocq fork
+    // Get VSRocq
     const vsrocq = vscode.extensions.getExtension('rocq-prover.vsrocq');
     
     if (!vsrocq) {
@@ -21,6 +20,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // Activate it (or get it if already active)
     const api = await vsrocq.activate();
+
+    //Just for testing
+    console.log(Object.keys(api));
 
     vscode.window.showInformationMessage('string-diagrams connected to VSRocq!');
 
@@ -50,23 +52,32 @@ export async function activate(context: vscode.ExtensionContext) {
             //const h = Graph.gen('h', 1, 4);
             //const testGraph = f.compose(g).compose(h);
 
-            
+            const rawText = messageText.trim();
+            const jsonStr = rawText.startsWith("RENDER PRO:") 
+                ? rawText.slice("RENDER PRO:".length).trim()
+                : rawText;
 
-            if (!messageText.trim().startsWith("{")) {
+            if (!jsonStr.startsWith("{")) {
                 if (messageText) {
                     vscode.window.showErrorMessage('Unrecognized message text');
                 };
                 return;
             }
 
-            const json = JSON.parse(messageText);
+            const json = JSON.parse(jsonStr);
 
-            if (json.type !== "diagram") {
+            if (json.type !== "diagram" && json.type !== "equation") {
                 return;
             }
 
-            const graph = graphFromJsonRobust(json.data);
-            renderDiagram(context, graph);
+            if (json.type === "equation") {
+                const lhs = graphToJson(graphFromJsonRobust(json.data[0]));
+                const rhs = graphToJson(graphFromJsonRobust(json.data[1]));
+                showDiagram(context, { lhs, rhs });
+            } else {
+                const graph = graphToJson(graphFromJsonRobust(json.data));
+                showDiagram(context, { lhs: graph });
+            }
         })
     );
 }
@@ -96,14 +107,9 @@ export const stringOfPpString = (pp: any): string => {
 };
 
 
-function renderDiagram(context: vscode.ExtensionContext, graph: Graph) {
-    const graphData = graphToJson(graph);
-    showDiagram(context, graphData);
-}
+let loadingGraphData: {lhs: object, rhs?: object} | null = null;
 
-let loadingGraphData: object | null = null;
-
-function showDiagram(context: vscode.ExtensionContext, graphData: object) {
+function showDiagram(context: vscode.ExtensionContext, graphData: {lhs:object, rhs?:object}) {
     loadingGraphData = graphData;
     if (!diagramPanel) {
         diagramPanel = vscode.window.createWebviewPanel(
@@ -130,7 +136,7 @@ function showDiagram(context: vscode.ExtensionContext, graphData: object) {
         <head>
         <meta charset="UTF-8">
         <style>
-            body { margin: 0; padding: 0; background: #ac5e2d; }
+            body { margin: 0; padding: 0; background: #31b8c7; }
             .graph-panel { width: 100%; height: 100%; background: white; }
         </style>
         </head>
