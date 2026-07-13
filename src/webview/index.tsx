@@ -39,10 +39,24 @@ function App() {
     
     if (rhs) {
         return (
-            <Splitpane orientation="horizontal">
+            <div style={{ display: 'flex', width: '100%', height: '100%', alignItems: 'center' }}>
+            <div style={{ flex: 1, height: '100%' }}>
                 <GraphView graph={lhs} />
+            </div>
+            <div style={{ 
+                flexShrink: 0, 
+                padding: '0 16px', 
+                fontSize: '48px', 
+                fontWeight: 'bold',
+                color: 'black',
+                background: 'white'
+            }}>
+                =
+            </div>
+            <div style={{ flex: 1, height: '100%' }}>
                 <GraphView graph={rhs} />
-            </Splitpane>
+            </div>
+        </div>
         );
     }
 

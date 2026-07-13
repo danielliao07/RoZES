@@ -29,15 +29,15 @@ export async function activate(context: vscode.ExtensionContext) {
     // Listen for proof state changes
     context.subscriptions.push(
         api.onProofStateChanged((pv: any) => {
-            if (!pv.proof || pv.proof.goals.length === 0) {
+            if (!pv.proof) {
                 // hide the panel when pv.proof is null, should be when outside proof
                 if (diagramPanel) {
                     diagramPanel.dispose();
                 }
                 return;
             }
-            const goalText = stringOfPpString(pv.proof.goals[0].goal);
-            console.log(goalText); // prints goal text
+            //const goalText = stringOfPpString(pv.proof.goals[0].goal);
+            //console.log(goalText); // prints goal text
 
             //just hedge everything
             if (!pv.messages || pv.messages.length === 0 || !pv.messages[0]) {
@@ -45,12 +45,6 @@ export async function activate(context: vscode.ExtensionContext) {
             }
             const messageText = stringOfPpString(pv.messages[0][1]);
             console.log(messageText);
-
-            // TEMPORARY: hardcoded graph 
-            //const f = Graph.gen('f', 2, 3);
-            //const g = Graph.gen('g', 3, 1);
-            //const h = Graph.gen('h', 1, 4);
-            //const testGraph = f.compose(g).compose(h);
 
             const rawText = messageText.trim();
             const jsonStr = rawText.startsWith("RENDER PRO:") 
