@@ -1,6 +1,6 @@
-# proof-tree README
+# String-diagrams README
 
-This is the README for your extension "proof-tree". After writing up a brief description, we recommend including the following sections.
+String-diagrams is a VSCode extension designed to robustly render the ZX-calculus graphically as string diagrams.
 
 ## Features
 

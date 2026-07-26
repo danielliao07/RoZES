@@ -46,6 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
             const messageText = stringOfPpString(pv.messages[0][1]);
             console.log(messageText);
 
+
             const rawText = messageText.trim();
             const jsonStr = rawText.startsWith("RENDER PRO:") 
                 ? rawText.slice("RENDER PRO:".length).trim()
@@ -130,8 +131,20 @@ function showDiagram(context: vscode.ExtensionContext, graphData: {lhs:object, r
         <head>
         <meta charset="UTF-8">
         <style>
-            body { margin: 0; padding: 0; background: #31b8c7; }
-            .graph-panel { width: 100%; height: 100%; background: white; }
+            body { margin: 0; padding: 0; height: 100%; background: #ffffff; } #root {height: 100%;}
+            .graph-panel {
+                width: 100%;
+                height: 100%;
+                background: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .graph-svg {
+                width: 100%; !important
+                height: 100%; !important
+                max-height: 100vh;
+            }
         </style>
         </head>
         <body>
