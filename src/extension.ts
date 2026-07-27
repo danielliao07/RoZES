@@ -8,8 +8,8 @@ import { graphFromJsonRobust } from './termParser';
 let diagramPanel: vscode.WebviewPanel | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
-    console.log('string-diagrams activating');
-    vscode.window.showInformationMessage('string-diagrams activated');
+    console.log('RoZES activating');
+    vscode.window.showInformationMessage('RoZES activated');
     // Get VSRocq
     const vsrocq = vscode.extensions.getExtension('rocq-prover.vsrocq');
     
@@ -24,7 +24,7 @@ export async function activate(context: vscode.ExtensionContext) {
     //Just for testing
     console.log(Object.keys(api));
 
-    vscode.window.showInformationMessage('string-diagrams connected to VSRocq!');
+    vscode.window.showInformationMessage('RoZES connected to VSRocq!');
 
     // Listen for proof state changes
     context.subscriptions.push(

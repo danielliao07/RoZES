@@ -1,7 +1,7 @@
 {
-  "name": "string-diagrams",
-  "displayName": "string-diagrams",
-  "description": "proof reasoning visualizer integrated with VSRocq",
+  "name": "rozes",
+  "displayName": "RoZES: Robust ZX-Calculus Extension for String-diagrams",
+  "description": "A live ZX-Calculus visualizer using TensorRocq and VyZX integrated with VSRocq",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.116.0"
