@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Graph } from 'chyp2/lib/graph';
-import { graphToSvgString, graphToJson } from './chypRender';
+import { graphToJson } from './chypRender';
 import { graphFromJsonRobust } from './termParser';
 
 let diagramPanel: vscode.WebviewPanel | undefined;
@@ -73,6 +73,12 @@ export async function activate(context: vscode.ExtensionContext) {
                 const graph = graphToJson(graphFromJsonRobust(json.data));
                 showDiagram(context, { lhs: graph });
             }
+        }),
+        // re-send the current diagram when a RoZES layout setting changes
+        vscode.workspace.onDidChangeConfiguration(e => {
+            if (e.affectsConfiguration('rozes.layout') && loadingGraphData) {
+                postDiagram(loadingGraphData);
+            }
         })
     );
 }
@@ -101,6 +107,18 @@ export const stringOfPpString = (pp: any): string => {
     }
 };
 
+function spacingFromSettings() {
+    const c = vscode.workspace.getConfiguration('rozes.layout');
+    return {
+        betweenLayers: c.get<number>('columnGap', 80),
+        nodeNode: c.get<number>('boxGap', 40),
+        edgeNode: c.get<number>('wireClearance', 25),
+    };
+}
+
+function postDiagram(data: { lhs: object, rhs?: object }) {
+    diagramPanel?.webview.postMessage({ ...data, spacing: spacingFromSettings() });
+}
 
 let loadingGraphData: {lhs: object, rhs?: object} | null = null;
 
@@ -141,9 +159,8 @@ function showDiagram(context: vscode.ExtensionContext, graphData: {lhs:object, r
                 justify-content: center;
             }
             .graph-svg {
-                width: 100%; !important
-                height: 100%; !important
-                max-height: 100vh;
+                width: 100%;
+                height: 100%;
             }
         </style>
         </head>
@@ -160,14 +177,14 @@ function showDiagram(context: vscode.ExtensionContext, graphData: {lhs:object, r
             console.log('received message from webview:', msg);
             if (msg.type === 'ready' && loadingGraphData) {
                 console.log('webview ready');
-                diagramPanel!.webview.postMessage(loadingGraphData);
+                postDiagram(loadingGraphData);
                 console.log(graphData);
                 console.log(loadingGraphData);
             }
         });
     } else {
 
-    diagramPanel.webview.postMessage(graphData);
+    postDiagram(graphData);
 
     }
 }

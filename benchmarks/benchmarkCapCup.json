@@ -1,0 +1,27 @@
+{
+ "data" : [
+   {
+    "left" : {
+     "left" : {"data": "Z", "insize": [], "outsize": [0, 0], "type": "gen"},
+     "right" : {
+      "bottom" : {"data": "Z (0 + 0)%R", "insize": [0], "outsize": [0], "type": "gen"},
+      "top" : {"data": "X (0 + 0)%R", "insize": [0], "outsize": [0], "type": "gen"},
+      "type" : "stack"
+     },
+     "type" : "compose"
+    },
+    "right" : {"data": "X", "insize": [0, 0], "outsize": [], "type": "gen"},
+    "type" : "compose"
+   },
+   {
+    "left" : {"data": "Z", "insize": [0], "outsize": [0, 0], "type": "gen"},
+    "right" : {"data": "X", "insize": [0, 0], "outsize": [0], "type": "gen"},
+    "type" : "compose"
+   }
+ ],
+ "diagramtype" : "symmetric",
+ "type" : "equation",
+ "types" : [
+   "1"
+ ]
+}

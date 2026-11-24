@@ -1,0 +1,47 @@
+{
+ "data" : [
+   {
+    "left" : {
+     "left" : {"data": "triangle out5", "insize": [0], "outsize": [0, 0, 0, 0, 0], "type": "gen"},
+     "right" : {
+      "bottom" : {
+       "bottom" : {
+        "bottom" : {
+         "bottom" : {"data": "triangle", "insize": [0], "outsize": [0], "type": "gen"},
+         "top" : {"data": "triangle", "insize": [0], "outsize": [0], "type": "gen"},
+         "type" : "stack"
+        },
+        "top" : {"data": "triangle", "insize": [0], "outsize": [0], "type": "gen"},
+        "type" : "stack"
+       },
+       "top" : {"data": "triangle", "insize": [0], "outsize": [0], "type": "gen"},
+       "type" : "stack"
+      },
+      "top" : {"data": "triangle", "insize": [0], "outsize": [0], "type": "gen"},
+      "type" : "stack"
+     },
+     "type" : "compose"
+    },
+    "right" : {"data": "triangle in5", "insize": [0, 0, 0, 0, 0], "outsize": [0], "type": "gen"},
+    "type" : "compose"
+   },
+   {
+    "left" : {
+     "bottom" : {"data": "triangle out4", "insize": [0], "outsize": [0, 0, 0, 0], "type": "gen"},
+     "top" : {"data": "triangle out3", "insize": [0], "outsize": [0, 0, 0], "type": "gen"},
+     "type" : "stack"
+    },
+    "right" : {
+     "bottom" : {"data": "triangle in4", "insize": [0, 0, 0, 0], "outsize": [0], "type": "gen"},
+     "top" : {"data": "triangle in3", "insize": [0, 0, 0], "outsize": [0], "type": "gen"},
+     "type" : "stack"
+    },
+    "type" : "compose"
+   }
+ ],
+ "diagramtype" : "symmetric",
+ "type" : "equation",
+ "types" : [
+   "1"
+ ]
+}

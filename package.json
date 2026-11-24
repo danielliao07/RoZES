@@ -19,7 +19,30 @@
         "command": "string-diagrams.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "RoZES",
+      "properties": {
+        "rozes.layout.columnGap": {
+          "type": "number",
+          "default": 100,
+          "minimum": 0,
+          "description": "Horizontal gap between columns of boxes in pixels."
+        },
+        "rozes.layout.boxGap": {
+          "type": "number",
+          "default": 40,
+          "minimum": 0,
+          "description": "Vertical gap between boxes in the same column in pixels."
+        },
+        "rozes.layout.wireClearance": {
+          "type": "number",
+          "default": 25,
+          "minimum": 0,
+          "description": "Clearance between wires and boxes in pixels."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -33,7 +56,8 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "preview": "esbuild src/test/preview.tsx --bundle --platform=node --format=cjs --jsx=automatic --jsx-import-source=preact --outfile=dist/preview.cjs --log-level=warning && node dist/preview.cjs"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -51,6 +75,7 @@
   },
   "dependencies": {
     "chyp2": "github:akissinger/chyp2",
+    "elkjs": "^0.12.1",
     "preact-render-to-string": "^6.7.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",

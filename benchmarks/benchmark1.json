@@ -1,0 +1,3 @@
+{"data" : {"bottom" : {"data" : "sink", "insize" : [0], "outsize" : [], "type" : "gen"},
+"top" : {"data" : "source", "insize" : [], "outsize" : [0], "type" : "gen"}, "type" : "stack"},
+"diagramtype" : "symmetric", "type" : "diagram", "types" : ["1"]}

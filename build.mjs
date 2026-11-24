@@ -1,14 +1,5 @@
 import * as esbuild from 'esbuild';
 
-await esbuild.build({
-  entryPoints: ['src/test/chyp2RenderTest.mts'],
-  bundle: true,
-  platform: 'node',
-  format: 'cjs',
-  outfile: 'dist/chyp2RenderTest.cjs',
-  loader: { '.css': 'empty' }, // strip CSS imports, no need for styling for a static SVG
-});
-
 // Browser bundle for the webview
 await esbuild.build({
     entryPoints: ['src/webview/index.tsx'],
