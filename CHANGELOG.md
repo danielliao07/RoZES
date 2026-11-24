@@ -14,7 +14,7 @@ All notable changes to RoZES will be documented in this file.
 - Z and X spiders are drawn as green and red circles, with the phase as the label.
 - A Z or X with 0 inputs and 2 outputs, or 2 inputs and 0 outputs, is drawn as a cup or a cap (an arc joining its two wire ends). See `src/style.ts` for drawing rules.
 - Shapes and colors are chosen by a rules table (`src/style.ts`) that matches on a generator's label and its number of inputs and outputs. It also supports squares and triangles. Support added for shapes, including triangles, squares, and circles, and various colors.
-- VSCode settings `rozes.layout.columnGap`, `rozes.layout.boxGap` and `rozes.layout.wireClearance` control the spacing, and the diagram live updates upon changes.
+- VSCode settings `rozes.layout.columnGap`, `rozes.layout.boxGap` and `rozes.layout.wireClearance` control the spacing, and the diagram live updates upon changes. Go to `File -> Preferences -> Settings`, then search for rozes. These three options should appear.
 
 ### Removed
 - Placeholder "Hello World" command.
