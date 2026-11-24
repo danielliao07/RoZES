@@ -1,13 +1,16 @@
 import * as esbuild from 'esbuild';
 
-// Browser bundle for the webview
+const production = process.argv.includes('--production');
+
+// Browser bundle for webview
 await esbuild.build({
     entryPoints: ['src/webview/index.tsx'],
     bundle: true,
     platform: 'browser',
     format: 'iife',
     outfile: 'dist/webview.js',
-    loader: { 
+    minify: production,
+    loader: {
         '.css': 'empty',
         '.tsx': 'tsx'
     },
@@ -15,4 +18,4 @@ await esbuild.build({
     jsxImportSource: 'preact',
 });
 
-console.log('built dist/chyp2RenderTest.cjs');
+console.log(`built dist/webview.js${production ? ' (minified)' : ''}`);
