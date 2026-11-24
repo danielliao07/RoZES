@@ -10,7 +10,7 @@ const TABLE: Row[] = [
     ['X',     '2',  '0',  '',   'Cap',    'Black'],
     ['Z(.*)', '.*', '.*', '$1', 'Circle', 'Green'],
     ['X(.*)', '.*', '.*', '$1', 'Circle', 'Red'],
-    ['H',     '.*', '.*', '',   'box',    'Yellow'],
+    ['H',     '.*', '.*', '',   'Square',    'Yellow'],
     // test words for the benchmark files, could delete later by changing benchmarks
     ['circle.*',   '.*', '.*', '', 'Circle',   'Green'],
     ['square.*',   '.*', '.*', '', 'Square',   'Red'],
