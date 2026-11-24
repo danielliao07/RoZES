@@ -2,6 +2,10 @@
 
 All notable changes to RoZES will be documented in this file.
 
+## [0.0.3] - 2026-11-24
+
+### Added
+- Draws the Hadamard generator `H` as a yellow box.
 
 ## [0.0.2] - 2026-11-23
 

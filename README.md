@@ -53,6 +53,10 @@ For now, cups and caps are drawn only for Z and X spiders with 0 inputs and 2 ou
 
 ## Release Notes
 
+### 0.0.3
+
+Support for the Hadamard generator is added as a yellow square labelled 'H'.
+
 ### 0.0.2
 
 Diagrams are now laid out with ELK and drawn by a simple custom SVG rendering, improving readability. Z and X spiders are drawn as circles, with cups and caps as arcs, and the layout spacing can be changed in the settings. See the changelog for details.

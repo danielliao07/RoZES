@@ -1,0 +1,1 @@
+{"data": {"left": {"left": {"data": "Z", "insize": [0], "outsize": [0], "type": "gen"}, "right": {"data": "H", "insize": [0], "outsize": [0], "type": "gen"}, "type": "compose"}, "right": {"data": "X", "insize": [0], "outsize": [0], "type": "gen"}, "type": "compose"}, "diagramtype": "symmetric", "type": "diagram", "types": ["1"]}

@@ -10,6 +10,7 @@ const TABLE: Row[] = [
     ['X',     '2',  '0',  '',   'Cap',    'Black'],
     ['Z(.*)', '.*', '.*', '$1', 'Circle', 'Green'],
     ['X(.*)', '.*', '.*', '$1', 'Circle', 'Red'],
+    ['H',     '.*', '.*', '',   'box',    'Yellow'],
     // test words for the benchmark files, could delete later by changing benchmarks
     ['circle.*',   '.*', '.*', '', 'Circle',   'Green'],
     ['square.*',   '.*', '.*', '', 'Square',   'Red'],
@@ -17,7 +18,7 @@ const TABLE: Row[] = [
 ];
 
 const COLORS: Record<string, string> = {
-    Black: '#000000', Green: '#98fb98', Red: '#ff2c2c', Blue: '#4169e1', Cyan: '#ccccff',
+    Black: '#000000', Green: '#98fb98', Red: '#ff2c2c', Blue: '#4169e1', Cyan: '#ccccff', Yellow: '#e8e337'
 };
 const SHAPES: Record<string, Shape> = {
     box: 'box', square: 'square', circle: 'circle', triangle: 'triangle', cup: 'cup', cap: 'cap',
